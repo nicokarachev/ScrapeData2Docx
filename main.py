@@ -31,7 +31,7 @@ print(url)
 driver.get(url)
 
 try:
-    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.TAG_NAME, "body")))
+    WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.TAG_NAME, "body")))
 except:
     print("Timeout loading page")
 # Get page content
@@ -39,8 +39,18 @@ html = driver.page_source
 soup = BeautifulSoup(html, "html.parser")
 
 # Example: Extract all links
-links = [a['href'] for a in soup.find_all("a", href=True)]
-print("Found links:", links)
+desc = soup.find("div", class_="tab-slide")
+
+# print(desc)
+
+topics = desc.find("h2")
+
+print(topics)
+
+if desc:
+    print("Journal Summary:", topics.getText())
+else:
+    print("Summary not found.")
 
 # Clean up
 driver.quit()
