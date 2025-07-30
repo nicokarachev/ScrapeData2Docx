@@ -12,6 +12,8 @@ from bs4 import BeautifulSoup
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from docx import Document
+import time
 
 options = Options()
 options.binary_location = "/usr/bin/google-chrome"
@@ -36,11 +38,14 @@ except:
     print("Timeout loading page")
 # Get page content
 html = driver.page_source
+# print(html)
+time.sleep(3)
+
 soup = BeautifulSoup(html, "html.parser")
+# print(soup)
 
 # Example: Extract all links
 desc = soup.find("div", class_="tab-slide")
-
 # print(desc)
 
 topics = desc.find("h2")
@@ -55,4 +60,14 @@ else:
 # Clean up
 driver.quit()
 
-#/usr/bin/chromium-browser --headless --no-sandbox --disable-dev-shm-usage --disable-gpu --remote-debugging-port=9222 https://research.com/journal/the-lancet
+# Create a new Word document
+doc = Document()
+
+# Add title and paragraphs
+doc.add_heading('My Report', level=1)
+doc.add_paragraph('This is the first paragraph.')
+doc.add_paragraph('Another paragraph with some more content.')
+doc.add_paragraph(topics)
+
+# Save the document
+doc.save('my_report.docx')
